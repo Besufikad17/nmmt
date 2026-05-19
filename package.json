@@ -25,6 +25,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/mongoose": "^11.0.4",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.4.3",
     "@nestjs/typeorm": "^11.0.1",
     "joi": "^18.2.1",
     "reflect-metadata": "^0.2.2",
@@ -78,6 +79,7 @@
     "moduleNameMapper": {
       "^lib/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^lib/db(|/.*)$": "<rootDir>/libs/db/src/$1",
+      "^lib/swagger(|/.*)$": "<rootDir>/libs/swagger/src/$1",
       "^libs/config(|/.*)$": "<rootDir>/libs/config/src/$1"
     }
   }

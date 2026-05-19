@@ -34,6 +34,12 @@
       "lib/db/*": [
         "libs/db/src/*"
       ],
+      "lib/swagger": [
+        "libs/swagger/src"
+      ],
+      "lib/swagger/*": [
+        "libs/swagger/src/*"
+      ],
       "libs/config": [
         "libs/config/src"
       ],
