@@ -74,6 +74,7 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
+      "^lib/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^libs/config(|/.*)$": "<rootDir>/libs/config/src/$1"
     }
   }
