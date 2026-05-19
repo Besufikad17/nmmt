@@ -28,6 +28,12 @@
       "lib/common/*": [
         "libs/common/src/*"
       ],
+      "lib/db": [
+        "libs/db/src"
+      ],
+      "lib/db/*": [
+        "libs/db/src/*"
+      ],
       "libs/config": [
         "libs/config/src"
       ],
