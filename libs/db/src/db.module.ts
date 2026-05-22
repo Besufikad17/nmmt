@@ -1,104 +1,38 @@
 import { Module, DynamicModule, Global } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+export interface DbConnectionOptions {
+  name: string;
+  uri: string;
+  synchronize?: boolean;
+  logging?: boolean;
+}
 
 @Global()
 @Module({})
 export class DbModule {
-  static forRoot(): DynamicModule {
-    const dbType = (process.env.DB_TYPE || 'mongodb').toLowerCase();
-    const databaseUri = process.env.DATABASE_URI || this.getDefaultUri(dbType);
-
-    if (dbType === 'mongodb') {
-      return {
-        module: DbModule,
-        imports: [
-          MongooseModule.forRootAsync({
-            imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => ({
-              uri: configService.get<string>('database.uri') || databaseUri,
-            }),
-            inject: [ConfigService],
+  static forRoot(options: DbConnectionOptions): DynamicModule {
+    return {
+      module: DbModule,
+      imports: [
+        TypeOrmModule.forRootAsync({
+          name: options.name,
+          imports: [ConfigModule],
+          useFactory: () => ({
+            type: 'postgres',
+            url: options.uri,
+            autoLoadEntities: true,
+            synchronize: options.synchronize,
+            logging: options.logging,
           }),
-        ],
-        exports: [MongooseModule],
-      };
-    } else if (dbType === 'postgresql' || dbType === 'postgres') {
-      return {
-        module: DbModule,
-        imports: [
-          TypeOrmModule.forRootAsync({
-            imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => ({
-              type: 'postgres',
-              url: configService.get<string>('database.uri') || databaseUri,
-              autoLoadEntities: true,
-              synchronize: configService.get<string>('NODE_ENV') !== 'production',
-              logging: configService.get<string>('NODE_ENV') === 'development',
-            }),
-            inject: [ConfigService],
-          }),
-        ],
-        exports: [TypeOrmModule],
-      };
-    } else if (dbType === 'mysql' || dbType === 'mariadb') {
-      return {
-        module: DbModule,
-        imports: [
-          TypeOrmModule.forRootAsync({
-            imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => ({
-              type: 'mysql',
-              url: configService.get<string>('database.uri') || databaseUri,
-              autoLoadEntities: true,
-              synchronize: configService.get<string>('NODE_ENV') !== 'production',
-              logging: configService.get<string>('NODE_ENV') === 'development',
-            }),
-            inject: [ConfigService],
-          }),
-        ],
-        exports: [TypeOrmModule],
-      };
-    } else {
-      throw new Error(`Unsupported database type: ${dbType}. Supported: mongodb, postgresql, mysql`);
-    }
+        }),
+      ],
+      exports: [TypeOrmModule],
+    };
   }
 
-  private static getDefaultUri(dbType: string): string {
-    const host = process.env.DB_HOST || 'localhost';
-    const port = process.env.DB_PORT || (dbType === 'mongodb' ? '27017' : dbType === 'postgresql' ? '5432' : '3306');
-    const database = process.env.DB_NAME || 'nestjs_app';
-    const username = process.env.DB_USERNAME;
-    const password = process.env.DB_PASSWORD;
-
-    switch (dbType) {
-      case 'mongodb':
-        return username && password
-          ? `mongodb://${username}:${password}@${host}:${port}/${database}`
-          : `mongodb://${host}:${port}/${database}`;
-      case 'postgresql':
-      case 'postgres':
-        return `postgresql://${username || 'postgres'}:${password || ''}@${host}:${port}/${database}`;
-      case 'mysql':
-      case 'mariadb':
-        return `mysql://${username || 'root'}:${password || ''}@${host}:${port}/${database}`;
-      default:
-        return `mongodb://${host}:${port}/${database}`;
-    }
-  }
-
-  /**
-   * For MongoDB - Register schemas
-   */
-  static forFeatureMongo(schemas: any[]) {
-    return MongooseModule.forFeature(schemas);
-  }
-
-  /**
-   * For TypeORM - Register entities
-   */
-  static forFeatureTypeORM(entities: any[]) {
-    return TypeOrmModule.forFeature(entities);
+  static forFeatureTypeORM(entities: any[], datasourceName: string) {
+    return TypeOrmModule.forFeature(entities, datasourceName);
   }
 }

@@ -9,24 +9,14 @@ const baseSchema = Joi.object({
 		.description('Node environment'),
 
 	// Database Configuration
-	DB_TYPE: Joi.string()
-		.valid('mongodb', 'postgresql', 'postgres', 'mysql', 'mariadb')
-		.default('mongodb')
-		.description('Database type'),
-
-	DATABASE_URI: Joi.string()
-		.optional()
-		.description('Database connection URI'),
-
-	DB_HOST: Joi.string().hostname().optional().description('Database host'),
-	DB_PORT: Joi.number().port().optional().description('Database port'),
-	DB_USERNAME: Joi.string().optional().description('Database username'),
-	DB_PASSWORD: Joi.string().optional().description('Database password'),
-	DB_NAME: Joi.string().optional().description('Database name'),
+	AUTH_DATABASE_URI: Joi.string().required()
+		.description('Auth Database connection URI'),
 
 	// Application Configuration
 	APP_NAME: Joi.string().default('NestJS App').optional().description('Application name'),
 	PORT: Joi.number().port().optional().description('Default port'),
+	AUTH_SERVICE_PORT: Joi.number().port().optional().description('Auth service port'),
+	SERVICE_URL: Joi.string().description('Host name for the all applications'),
 
 	// JWT Configuration
 	JWT_SECRET: Joi.string().optional().description('JWT secret key'),
