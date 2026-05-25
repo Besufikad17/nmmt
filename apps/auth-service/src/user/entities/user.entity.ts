@@ -11,13 +11,13 @@ export class User {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@Column({ unique: true })
+	@Column({ name: 'phone_number', unique: true })
 	phoneNumber: string;
 
-	@Column()
+	@Column({ name: 'password_hashed' })
 	passwordHashed: string;
 
-	@Column({ nullable: true })
+	@Column({ name: 'last_login', nullable: true })
 	lastLogin?: Date;
 
 	@Column({
@@ -27,15 +27,15 @@ export class User {
 	})
 	status: UserStatus;
 
-	@Column({ default: false })
+	@Column({ name: 'two_factor_enabled', default: false })
 	twoFactorEnabled: boolean;
 
-	@Column({ default: false })
+	@Column({ name: 'phone_number_verified', default: false })
 	phoneNumberVerified: boolean;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;
 
-	@UpdateDateColumn()
+	@UpdateDateColumn({ name: 'deleted_at' })
 	updatedAt: Date;
 }
