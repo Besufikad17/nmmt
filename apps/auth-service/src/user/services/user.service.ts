@@ -1,10 +1,11 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { IUserRepository, IUserService } from '../interfaces';
+import { IUserRepository } from '../interfaces';
 import { User } from '../entities/user.entity';
-import { LoggerService } from 'lib/common';
-import { CreateUserDto } from '../dto/user.dto';
+import { LoggerService } from '@app/common';
 import { RpcException } from '@nestjs/microservices';
-import { hash } from 'lib/common/utils/hash.utils';
+import { hash } from '@app/common/utils/hash.utils';
+import { IUserService } from '@app/common/interfaces';
+import { CreateUserDto, FindUserDto, UpdateUserDto } from '@app/common/dto';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -23,6 +24,39 @@ export class UserService implements IUserService {
       return await this.userRepository.createUser({
         ...userWithoutPassword,
         passwordHashed: hashedPassword
+      });
+    } catch (error) {
+      this.logger.error(error.message || 'Failed to create user!!');
+      throw new RpcException({
+        message: 'Failed to create user!!',
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        meta: {}
+      });
+    }
+  }
+
+  async findUser(findUserDto: FindUserDto): Promise<User | null> {
+    try {
+      return await this.userRepository.findUser({
+        where: { ...findUserDto }
+      });
+    } catch (error) {
+      this.logger.error(error.message || 'Failed to create user!!');
+      throw new RpcException({
+        message: 'Failed to create user!!',
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        meta: {}
+      });
+    }
+  }
+
+  async updateUser(updateUserDto: UpdateUserDto): Promise<void> {
+    try {
+      const { id, ...updatePayload } = updateUserDto;
+
+      return await this.userRepository.updateUser({
+        where: { id },
+        data: { ...updatePayload }
       });
     } catch (error) {
       this.logger.error(error.message || 'Failed to create user!!');

@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Logger } from '@nestjs/common';
-import { validateEnvByNodeEnv } from 'libs/config';
+import { validateEnvByNodeEnv } from '@app/config';
 
 async function bootstrap() {
   const logger = new Logger('AUTH');
@@ -20,7 +20,7 @@ async function bootstrap() {
     transport: Transport.TCP,
     options: {
       host: process.env.SERVICE_URL,
-      port: parseInt(process.env.AUTH_SERVICE_PORT || '3002', 10),
+      port: parseInt(process.env.AUTH_SERVICE_PORT || '3001', 10),
     },
   });
 

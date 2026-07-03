@@ -22,28 +22,28 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "lib/common": [
+      "@app/common": [
         "libs/common/src"
       ],
-      "lib/common/*": [
+      "@app/common/*": [
         "libs/common/src/*"
       ],
-      "lib/db": [
+      "@app/db": [
         "libs/db/src"
       ],
-      "lib/db/*": [
+      "@app/db/*": [
         "libs/db/src/*"
       ],
-      "lib/swagger": [
+      "@app/swagger": [
         "libs/swagger/src"
       ],
-      "lib/swagger/*": [
+      "@app/swagger/*": [
         "libs/swagger/src/*"
       ],
-      "libs/config": [
+      "@app/config": [
         "libs/config/src"
       ],
-      "libs/config/*": [
+      "@app/config/*": [
         "libs/config/src/*"
       ]
     }

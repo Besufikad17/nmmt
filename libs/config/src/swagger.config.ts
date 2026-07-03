@@ -2,7 +2,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication, Logger } from '@nestjs/common';
 
 export function setupSwagger(app: INestApplication): void {
-	const logger = new Logger('Swagger');
+	const logger = new Logger('SWAGGER');
 	const config = new DocumentBuilder()
 		.setTitle(process.env.SWAGGER_TITLE || 'NestJS API')
 		.setDescription(process.env.SWAGGER_DESCRIPTION || 'API Documentation')
@@ -18,9 +18,6 @@ export function setupSwagger(app: INestApplication): void {
 			},
 			'JWT-auth',
 		)
-		.addTag('health', 'Health check endpoints')
-		.addTag('users', 'User management endpoints')
-		.addTag('admin', 'Admin endpoints')
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);

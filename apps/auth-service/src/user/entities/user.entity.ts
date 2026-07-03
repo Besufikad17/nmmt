@@ -1,13 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
-
-export enum UserStatus {
-	ACTIVE = 'ACTIVE',
-	DEACTIVATED = 'DEACTIVATED',
-	PENDING = 'PENDING'
-}
+import { IUser } from "@app/common/interfaces";
+import { UserStatus } from "@app/common/enums";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
+import { RefreshToken } from "../../refresh-token/entities/refresh-token.entity";
 
 @Entity({ database: 'auth' })
-export class User {
+export class User implements IUser {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
@@ -16,6 +13,9 @@ export class User {
 
 	@Column({ name: 'password_hashed' })
 	passwordHashed: string;
+
+	@Column({ name: 'token_version' })
+	tokenVersion: number;
 
 	@Column({ name: 'last_login', nullable: true })
 	lastLogin?: Date;
@@ -36,6 +36,9 @@ export class User {
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;
 
-	@UpdateDateColumn({ name: 'deleted_at' })
+	@UpdateDateColumn({ name: 'updated_at' })
 	updatedAt: Date;
+
+	@OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
+	refreshTokens: RefreshToken[];
 }

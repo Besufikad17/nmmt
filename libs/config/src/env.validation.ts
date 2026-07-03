@@ -14,9 +14,9 @@ const baseSchema = Joi.object({
 
 	// Application Configuration
 	APP_NAME: Joi.string().default('NestJS App').optional().description('Application name'),
-	PORT: Joi.number().port().optional().description('Default port'),
+	PORT: Joi.number().port().required().description('Default port'),
 	AUTH_SERVICE_PORT: Joi.number().port().optional().description('Auth service port'),
-	SERVICE_URL: Joi.string().description('Host name for the all applications'),
+	AUTH_SERVICE_URL: Joi.string().optional().description('Host name for the all applications'),
 
 	// JWT Configuration
 	JWT_SECRET: Joi.string().optional().description('JWT secret key'),
