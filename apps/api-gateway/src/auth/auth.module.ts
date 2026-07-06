@@ -5,9 +5,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { RefreshTokenModule } from '../refresh-token/refresh-token.module';
 import { UserModule } from '../user/user.module';
+import { IAuthService } from './interfaces';
 
 @Module({
-  providers: [AuthService],
+  providers: [
+    { provide: IAuthService, useClass: AuthService },
+    AuthService
+  ],
   controllers: [AuthController],
   imports: [
     JwtModule.registerAsync({

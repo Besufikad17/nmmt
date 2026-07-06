@@ -118,16 +118,10 @@ export class AuthService implements IAuthService {
         throw new NotFoundException("User already exists with this credentials");
       }
 
-      const newUser = await this.userService.createUser({ ...signUpDto });
-      const accessToken = await this.generateAccessToken(newUser);
-      const refreshToken = await this.generateRefreshToken(newUser);
+      await this.userService.createUser({ ...signUpDto });
 
       return {
-        message: "Login successful",
-        data: {
-          accessToken,
-          refreshToken
-        },
+        message: "User signed up",
         success: true
       };
     } catch (error) {

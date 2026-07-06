@@ -14,7 +14,7 @@ export class User implements IUser {
 	@Column({ name: 'password_hashed' })
 	passwordHashed: string;
 
-	@Column({ name: 'token_version' })
+	@Column({ name: 'token_version', default: 1 })
 	tokenVersion: number;
 
 	@Column({ name: 'last_login', nullable: true })

@@ -1,5 +1,8 @@
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { INestApplication, Logger } from '@nestjs/common';
+import { ApiExtraModels, ApiOkResponse, DocumentBuilder, getSchemaPath, SwaggerModule } from '@nestjs/swagger';
+import { applyDecorators, INestApplication, Logger, Type } from '@nestjs/common';
+import { ApiResponse } from '@app/common/dto/api-response.dto';
+
+
 
 export function setupSwagger(app: INestApplication): void {
 	const logger = new Logger('SWAGGER');
@@ -48,3 +51,31 @@ export function setupSwagger(app: INestApplication): void {
 		logger.log('Swagger is disabled in production. Set ENABLE_SWAGGER=true to enable.');
 	}
 }
+
+export const ApiOkResponseWithData = <TModel extends Type<unknown>>(
+	model: TModel,
+	isArray = false,
+) => {
+	return applyDecorators(
+		ApiExtraModels(ApiResponse, model),
+		ApiOkResponse({
+			schema: {
+				allOf: [
+					{ $ref: getSchemaPath(ApiResponse) },
+					{
+						properties: {
+							data: isArray
+								? {
+									type: "array",
+									items: { $ref: getSchemaPath(model) },
+								}
+								: {
+									$ref: getSchemaPath(model),
+								},
+						},
+					},
+				],
+			},
+		}),
+	);
+};
