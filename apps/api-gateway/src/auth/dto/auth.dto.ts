@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
 import { IsValidPhoneNumber, TransformPhoneNumber } from "../validators/phone.validator";
+import { IAuthResponse } from "../interfaces";
 
 export class SignUpDto {
   @ApiProperty()
@@ -16,4 +17,12 @@ export class SignUpDto {
 }
 
 export class LoginDto extends SignUpDto { }
+
+export class AuthResponse implements IAuthResponse {
+  @ApiProperty({ description: "JWT access token" })
+  accessToken: string;
+
+  @ApiProperty({ description: "JWT refresh token" })
+  refreshToken: string;
+}
 

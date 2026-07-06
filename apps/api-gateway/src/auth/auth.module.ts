@@ -6,11 +6,15 @@ import { ConfigService } from '@nestjs/config';
 import { RefreshTokenModule } from '../refresh-token/refresh-token.module';
 import { UserModule } from '../user/user.module';
 import { IAuthService } from './interfaces';
+import { ITokenService } from './interfaces/toke.service.interface';
+import { TokenService } from './services/token.service';
 
 @Module({
   providers: [
     { provide: IAuthService, useClass: AuthService },
-    AuthService
+    { provide: ITokenService, useClass: TokenService },
+    AuthService,
+    TokenService
   ],
   controllers: [AuthController],
   imports: [

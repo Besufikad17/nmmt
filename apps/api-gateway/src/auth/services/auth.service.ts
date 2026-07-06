@@ -2,72 +2,16 @@ import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundExc
 import { LoginDto, SignUpDto } from '../dto/auth.dto';
 import { IAuthResponse, IAuthService } from '../interfaces';
 import { IApiResponse } from '../../common/interfaces';
-import { ConfigService } from '@nestjs/config';
-import { IUser } from '@app/common/interfaces';
-import { JwtPayload } from '@app/common/interfaces';
 import { compare } from '@app/common/utils/hash.utils';
-import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../../user/services/user.service';
-import { RefreshTokenService } from '../../refresh-token/services/refresh-token.service';
+import { ITokenService } from '../interfaces/toke.service.interface';
 
 @Injectable()
 export class AuthService implements IAuthService {
   constructor(
-    private readonly configService: ConfigService,
-    private readonly jwtService: JwtService,
-    private readonly refreshTokenService: RefreshTokenService,
+    private readonly tokenService: ITokenService,
     private readonly userService: UserService
   ) { }
-
-  private async generateAccessToken(user: IUser): Promise<string> {
-    const secretKey = this.configService.get<string>("JWT_SECRET");
-    if (!secretKey) {
-      throw new Error("JWT_SECRET_KEY is not defined");
-    }
-
-    const { id, phoneNumber, tokenVersion } = user;
-    return this.jwtService.sign<JwtPayload>(
-      {
-        sub: id,
-        phoneNumber,
-        tokenVersion
-      },
-      {
-        secret: secretKey,
-        expiresIn: this.configService.get("ACCESS_TOKEN_EXPIRES_IN") || "1hr",
-      },
-    );
-  }
-
-  private async generateRefreshToken(user: IUser, currentRefreshToken?: string, currentRefreshTokenExpiryDate?: Date) {
-    const { id, phoneNumber, tokenVersion } = user;
-    const newRefreshToken = this.jwtService.sign<JwtPayload>(
-      { sub: id, phoneNumber, tokenVersion },
-      {
-        secret: this.configService.get<string>("JWT_SECRET"),
-        expiresIn: this.configService.get("REFRESH_TOKEN_EXPIRES_IN") || "30d"
-      },
-    );
-
-    if (currentRefreshToken && currentRefreshTokenExpiryDate) {
-      const tokenExists = await this.refreshTokenService.findRefreshToken({
-        userId: id,
-        refreshToken: newRefreshToken
-      });
-
-      if (tokenExists) {
-        throw new BadRequestException("Invalid token!!");
-      }
-
-      await this.refreshTokenService.createRefreshToken({
-        userId: id,
-        refreshToken: currentRefreshToken,
-        expiresAt: currentRefreshTokenExpiryDate
-      });
-    }
-
-    return newRefreshToken;
-  }
 
   async login(loginDto: LoginDto): Promise<IApiResponse<IAuthResponse>> {
     try {
@@ -84,8 +28,8 @@ export class AuthService implements IAuthService {
         lastLogin: new Date()
       });
 
-      const accessToken = await this.generateAccessToken(user);
-      const refreshToken = await this.generateRefreshToken(user);
+      const accessToken = await this.tokenService.generateAccessToken(user);
+      const refreshToken = await this.tokenService.generateRefreshToken(user);
 
       return {
         message: "Login successful",
