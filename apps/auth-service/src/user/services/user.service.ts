@@ -37,6 +37,7 @@ export class UserService implements IUserService {
 
   async findUser(findUserDto: FindUserDto): Promise<User | null> {
     try {
+      console.log(findUserDto);
       return await this.userRepository.findUser({
         where: { ...findUserDto }
       });

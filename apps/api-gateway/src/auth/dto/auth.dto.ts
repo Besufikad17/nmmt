@@ -1,7 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 import { IsValidPhoneNumber, TransformPhoneNumber } from "../validators/phone.validator";
 import { IAuthResponse } from "../interfaces";
+
+export class AuthResponse implements IAuthResponse {
+  @ApiProperty({ description: "JWT access token" })
+  accessToken: string;
+
+  @ApiProperty({ description: "JWT refresh token" })
+  refreshToken: string;
+}
 
 export class SignUpDto {
   @ApiProperty()
@@ -18,11 +26,16 @@ export class SignUpDto {
 
 export class LoginDto extends SignUpDto { }
 
-export class AuthResponse implements IAuthResponse {
-  @ApiProperty({ description: "JWT access token" })
-  accessToken: string;
+export class RefreshTokenDto {
+  @IsNotEmpty()
+  @IsUUID()
+  userId: string;
 
-  @ApiProperty({ description: "JWT refresh token" })
-  refreshToken: string;
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  currentRefreshToken: string;
 }
-

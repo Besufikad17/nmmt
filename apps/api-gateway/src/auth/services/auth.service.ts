@@ -1,10 +1,11 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { LoginDto, SignUpDto } from '../dto/auth.dto';
+import { LoginDto, RefreshTokenDto, SignUpDto } from '../dto/auth.dto';
 import { IAuthResponse, IAuthService } from '../interfaces';
-import { IApiResponse } from '../../common/interfaces';
 import { compare } from '@app/common/utils/hash.utils';
 import { UserService } from '../../user/services/user.service';
 import { ITokenService } from '../interfaces/toke.service.interface';
+import { decodeToken } from '@app/common/utils/jwt.utils';
+import { IApiResponse } from '@app/common/interfaces';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -67,6 +68,45 @@ export class AuthService implements IAuthService {
       return {
         message: "User signed up",
         success: true
+      };
+    } catch (error) {
+      console.error('Error: ', error);
+      if (error instanceof HttpException) {
+        throw error;
+      } else if (error.statusCode && error.message) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'An unexpected error occurred.',
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
+    }
+  }
+
+  async refreshToken(refreshTokenDto: RefreshTokenDto): Promise<IApiResponse<IAuthResponse>> {
+    try {
+      const { userId, currentRefreshToken } = refreshTokenDto;
+
+      const user = await this.userService.findUser({
+        id: userId
+      });
+
+      if (!user) throw new NotFoundException('User not found!!');
+
+      const accessToken = await this.tokenService.generateAccessToken(user);
+      const refreshToken = await this.tokenService.generateRefreshToken(
+        user, currentRefreshToken,
+        currentRefreshToken ?
+          new Date(decodeToken(currentRefreshToken).exp as number) : undefined);
+
+      return {
+        success: true,
+        message: "Token refreshed successfully",
+        data: {
+          accessToken,
+          refreshToken
+        }
       };
     } catch (error) {
       console.error('Error: ', error);
