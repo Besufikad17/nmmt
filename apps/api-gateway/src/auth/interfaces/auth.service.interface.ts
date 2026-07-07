@@ -8,6 +8,7 @@ export interface IAuthResponse {
 
 export abstract class IAuthService {
   abstract login(loginDto: LoginDto): Promise<IApiResponse<IAuthResponse>>;
-  abstract signUp(signUpDto: SignUpDto): Promise<IApiResponse<IAuthResponse>>;
+  abstract signUp(signUpDto: SignUpDto): Promise<IApiResponse<null>>;
   abstract refreshToken(refreshTokenDto: RefreshTokenDto): Promise<IApiResponse<IAuthResponse>>;
+  abstract signOut(userId: string): Promise<IApiResponse<null>>;
 }

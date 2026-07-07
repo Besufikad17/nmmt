@@ -1,4 +1,4 @@
-import { CreateRefreshTokenDto, FindRefreshTokenDto } from "../dto/refresh-token.dto";
+import { CreateRefreshTokenDto, DeleteRefreshTokensDto, FindRefreshTokenDto, FindRefreshTokensDto } from "../dto/refresh-token.dto";
 
 export interface IRefreshToken {
 	id: string;
@@ -12,4 +12,6 @@ export interface IRefreshToken {
 export abstract class IRefreshTokenService {
 	abstract createRefreshToken(createRefreshTokenDto: CreateRefreshTokenDto): Promise<IRefreshToken>;
 	abstract findRefreshToken(findRefreshTokenDto: FindRefreshTokenDto): Promise<IRefreshToken | null>;
+	abstract findRefreshTokens(findRefreshTokensDto: FindRefreshTokensDto): Promise<IRefreshToken[]>;
+	abstract deleteRefreshTokens(deleteRefreshTokensDto: DeleteRefreshTokensDto): Promise<void>;
 }

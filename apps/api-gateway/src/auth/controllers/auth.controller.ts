@@ -43,4 +43,14 @@ export class AuthController {
       userId: user.id, email: user.phoneNumber!, currentRefreshToken: auth.split(" ")[1]
     });
   }
+
+  @Post("signout")
+  @UseGuards(JwtGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponseWithData(EmptyBodyResponse)
+  async signOut(
+    @GetCurrentUser() user: IUser
+  ) {
+    return await this.service.signOut(user.id);
+  }
 }

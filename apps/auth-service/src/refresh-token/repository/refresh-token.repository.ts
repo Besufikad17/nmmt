@@ -7,28 +7,32 @@ import { DeepPartial, FindManyOptions, FindOneOptions, FindOptionsWhere, QueryDe
 @Injectable()
 export class RefreshTokenRepository implements IRefreshTokenRepository {
   constructor(
-    @InjectRepository(RefreshToken, 'auth') private readonly userRepository: Repository<RefreshToken>
+    @InjectRepository(RefreshToken, 'auth') private readonly refreshTokenRepository: Repository<RefreshToken>
   ) { }
 
   async createRefreshToken(createRefreshTokenArgs: DeepPartial<RefreshToken>): Promise<RefreshToken> {
-    const user = this.userRepository.create(createRefreshTokenArgs);
-    const savedRefreshToken = await this.userRepository.save(user);
+    const user = this.refreshTokenRepository.create(createRefreshTokenArgs);
+    const savedRefreshToken = await this.refreshTokenRepository.save(user);
     return (Array.isArray(savedRefreshToken) ? savedRefreshToken[0] : savedRefreshToken) as RefreshToken;
   }
 
   async findRefreshTokens(findRefreshTokensArgs: FindManyOptions<RefreshToken>): Promise<RefreshToken[]> {
-    return this.userRepository.find(findRefreshTokensArgs);
+    return this.refreshTokenRepository.find(findRefreshTokensArgs);
   }
 
   async findRefreshToken(findRefreshTokenArgs: FindOneOptions<RefreshToken>): Promise<RefreshToken | null> {
-    return this.userRepository.findOne(findRefreshTokenArgs);
+    return this.refreshTokenRepository.findOne(findRefreshTokenArgs);
   }
 
   async updateRefreshToken(updateYserArgs: { where: FindOptionsWhere<RefreshToken>; data: QueryDeepPartialEntity<RefreshToken>; }): Promise<void> {
-    this.userRepository.update(updateYserArgs.where, updateYserArgs.data);
+    await this.refreshTokenRepository.update(updateYserArgs.where, updateYserArgs.data);
   }
 
   async deleteRefreshToken(id: string): Promise<void> {
-    this.userRepository.delete(id);
+    await this.refreshTokenRepository.delete(id);
+  }
+
+  async deleteRefreshTokens(deleteRefreshTokensArgs: FindOptionsWhere<RefreshToken>): Promise<void> {
+    await this.refreshTokenRepository.delete(deleteRefreshTokensArgs);
   }
 }

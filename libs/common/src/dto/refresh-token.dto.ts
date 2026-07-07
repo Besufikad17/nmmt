@@ -14,16 +14,20 @@ export class CreateRefreshTokenDto {
   readonly expiresAt: Date;
 }
 
-export class FindRefreshTokenDto {
-  @IsString()
-  @ValidateIf((obj) => obj.refreshToken !== undefined && obj.refreshToken !== null && obj.refreshToken !== "")
-  readonly refreshToken?: string;
-
+export class FindRefreshTokensDto {
   @IsUUID()
   @ValidateIf((obj) => obj.userId !== undefined && obj.userId !== null && obj.userId !== "")
   readonly userId?: string;
+}
+
+export class FindRefreshTokenDto extends FindRefreshTokensDto {
+  @IsString()
+  @ValidateIf((obj) => obj.refreshToken !== undefined && obj.refreshToken !== null && obj.refreshToken !== "")
+  readonly refreshToken?: string;
 
   @IsDate()
   @ValidateIf((obj) => obj.expiresAt !== undefined && obj.expiresAt !== null && obj.expiresAt !== "")
   readonly expiresAt?: Date;
 }
+
+export class DeleteRefreshTokensDto extends FindRefreshTokensDto { }

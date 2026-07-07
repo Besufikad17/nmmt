@@ -6,10 +6,12 @@ import { UserService } from '../../user/services/user.service';
 import { ITokenService } from '../interfaces/toke.service.interface';
 import { decodeToken } from '@app/common/utils/jwt.utils';
 import { IApiResponse } from '@app/common/interfaces';
+import { RefreshTokenService } from '../../refresh-token/services/refresh-token.service';
 
 @Injectable()
 export class AuthService implements IAuthService {
   constructor(
+    private readonly refreshTokenService: RefreshTokenService,
     private readonly tokenService: ITokenService,
     private readonly userService: UserService
   ) { }
@@ -55,7 +57,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  async signUp(signUpDto: SignUpDto): Promise<IApiResponse<IAuthResponse>> {
+  async signUp(signUpDto: SignUpDto): Promise<IApiResponse<null>> {
     try {
       const { phoneNumber } = signUpDto;
       const user = await this.userService.findUser({ phoneNumber });
@@ -107,6 +109,39 @@ export class AuthService implements IAuthService {
           accessToken,
           refreshToken
         }
+      };
+    } catch (error) {
+      console.error('Error: ', error);
+      if (error instanceof HttpException) {
+        throw error;
+      } else if (error.statusCode && error.message) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'An unexpected error occurred.',
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
+    }
+  }
+
+  async signOut(userId: string): Promise<IApiResponse<null>> {
+    try {
+      const user = await this.userService.findUser({
+        id: userId
+      });
+
+      if (!user) throw new NotFoundException('User not found!!');
+
+      await this.refreshTokenService.deleteRefreshTokens({ userId });
+      await this.userService.updateUser({
+        id: userId,
+        tokenVersion: user.tokenVersion + 1
+      });
+
+      return {
+        message: 'User signed out',
+        success: true
       };
     } catch (error) {
       console.error('Error: ', error);
