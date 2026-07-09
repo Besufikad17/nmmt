@@ -28,6 +28,12 @@
       "@app/common/*": [
         "libs/common/src/*"
       ],
+      "@app/config": [
+        "libs/config/src"
+      ],
+      "@app/config/*": [
+        "libs/config/src/*"
+      ],
       "@app/db": [
         "libs/db/src"
       ],
@@ -39,12 +45,6 @@
       ],
       "@app/swagger/*": [
         "libs/swagger/src/*"
-      ],
-      "@app/config": [
-        "libs/config/src"
-      ],
-      "@app/config/*": [
-        "libs/config/src/*"
       ]
     }
   }

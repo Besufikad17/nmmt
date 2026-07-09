@@ -2,6 +2,7 @@ import { IUser } from "@app/common/interfaces";
 import { UserStatus } from "@app/common/enums";
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
 import { RefreshToken } from "../../refresh-token/entities/refresh-token.entity";
+import { Otp } from "../../otp/entities/otp.entity";
 
 @Entity({ database: 'auth' })
 export class User implements IUser {
@@ -41,4 +42,7 @@ export class User implements IUser {
 
 	@OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
 	refreshTokens: RefreshToken[];
+
+	@OneToMany(() => Otp, (otp) => otp.user)
+	otps: Otp[];
 }

@@ -3,11 +3,12 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 import { RefreshToken } from '../refresh-token/entities/refresh-token.entity';
+import { Otp } from '../otp/entities/otp.entity';
 
 export default new DataSource({
   type: 'postgres',
   url: process.env.AUTH_DATABASE_URI,
-  entities: [User, RefreshToken],
+  entities: [User, Otp, RefreshToken],
   migrations: ['apps/auth-service/src/database/migrations/*.ts'],
   synchronize: false,
   logging: process.env.NODE_ENV === 'development',

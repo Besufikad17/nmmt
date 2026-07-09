@@ -11,12 +11,16 @@ const baseSchema = Joi.object({
 	// Database Configuration
 	AUTH_DATABASE_URI: Joi.string().required()
 		.description('Auth Database connection URI'),
+	NOTIFICATION_DATABASE_URI: Joi.string().required()
+		.description('Notification Database connection URI'),
 
 	// Application Configuration
 	APP_NAME: Joi.string().default('NestJS App').optional().description('Application name'),
 	PORT: Joi.number().port().required().description('Default port'),
 	AUTH_SERVICE_PORT: Joi.number().port().optional().description('Auth service port'),
+	NOTIFICATION_SERVICE_PORT: Joi.number().port().optional().description('Notification service port'),
 	AUTH_SERVICE_URL: Joi.string().optional().description('Host name for the all applications'),
+	NOTIFICATION_SERVICE_URL: Joi.string().optional().description('Host name for the all applications'),
 
 	// JWT Configuration
 	JWT_SECRET: Joi.string().optional().description('JWT secret key'),
@@ -25,6 +29,12 @@ const baseSchema = Joi.object({
 	JWT_REFRESH_EXPIRES_IN: Joi.string()
 		.default('7d')
 		.description('JWT refresh expiration time'),
+
+	// SMS Provider Configuration
+	AFRO_MESSAGE_IDENTIFIER: Joi.string().description('Afro Message identifier'),
+	AFRO_MESSAGE_SENDER: Joi.string().description('Afro Message sender'),
+	AFRO_MESSAGE_TOKEN: Joi.string().description('Afro Message token'),
+	AFRO_MESSAGE_BASE_URL: Joi.string().description('Afro Message base url'),
 }).unknown();
 
 export function validateEnv(config: Record<string, unknown>) {

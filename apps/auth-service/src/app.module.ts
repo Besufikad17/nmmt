@@ -5,6 +5,7 @@ import { DbModule } from '@app/db';
 import { CommonModule } from '@app/common/common.module';
 import { validateEnv } from '@app/config';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
+import { OtpModule } from './otp/otp.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { RefreshTokenModule } from './refresh-token/refresh-token.module';
       uri: process.env.AUTH_DATABASE_URI!
     }),
     UserModule,
-    RefreshTokenModule
+    RefreshTokenModule,
+    OtpModule,
   ]
 })
 export class AppModule { }
