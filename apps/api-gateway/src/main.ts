@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from '@app/common';
 import { setupSwagger } from '@app/config';
 import { validateEnvByNodeEnv } from '@app/config';
+import { BullBoardService } from './bull-board/bull-board.service';
 
 async function bootstrap() {
   const logger = new Logger('API_GATEWAY');
@@ -46,6 +47,10 @@ async function bootstrap() {
   setupSwagger(app);
 
   const port = parseInt(process.env.API_SERVER_PORT || process.env.PORT || '3000', 10);
+
+  const bullBoardService = app.get(BullBoardService);
+  bullBoardService.mountTo(app);
+
   await app.listen(port);
 
   logger.log(`Application is running on: http://localhost:${port}/${apiPrefix}`);

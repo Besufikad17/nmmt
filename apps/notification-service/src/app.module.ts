@@ -1,12 +1,32 @@
 import { validateEnv } from '@app/config';
 import { DbModule } from '@app/db';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NotificationModule } from './notification/notification.module';
 import { SmsModule } from './sms/sms.module';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
+    BullModule.forRootAsync({
+      useFactory: (config: ConfigService) => ({
+        connection: {
+          host: config.get('REDIS_HOST') || 'redis',
+          port: config.get('REDIS_PORT') || 6379,
+          password: config.get('REDIS_PASSWORD')
+        },
+        defaultJobOptions: {
+          attempts: 3,
+          backoff: {
+            type: 'fixed',
+            delay: 3000,
+          },
+          keepLogs: 1,
+          lifo: false,
+        }
+      }),
+      inject: [ConfigService],
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],

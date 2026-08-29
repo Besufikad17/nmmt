@@ -12,6 +12,9 @@ export class User implements IUser {
 	@Column({ name: 'phone_number', unique: true })
 	phoneNumber: string;
 
+	@Column({ name: 'email', unique: true })
+	email: string;
+
 	@Column({ name: 'password_hashed' })
 	passwordHashed: string;
 

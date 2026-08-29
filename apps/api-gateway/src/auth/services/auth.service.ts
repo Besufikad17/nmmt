@@ -1,12 +1,13 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { LoginDto, RefreshTokenDto, SignUpDto } from '../dto/auth.dto';
+import { LoginDto, RefreshTokenDto, ResetPasswordDto, SignUpDto } from '../dto/auth.dto';
 import { IAuthResponse, IAuthService } from '../interfaces';
-import { compare } from '@app/common/utils/hash.utils';
+import { compare, hash } from '@app/common/utils/hash.utils';
 import { UserService } from '../../user/services/user.service';
 import { ITokenService } from '../interfaces/toke.service.interface';
 import { decodeToken } from '@app/common/utils/jwt.utils';
 import { IApiResponse } from '@app/common/interfaces';
 import { RefreshTokenService } from '../../refresh-token/services/refresh-token.service';
+import { BCRYPT_ROUNDS } from '@app/common/constants/strings';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -142,6 +143,48 @@ export class AuthService implements IAuthService {
       return {
         message: 'User signed out',
         success: true
+      };
+    } catch (error) {
+      console.error('Error: ', error);
+      if (error instanceof HttpException) {
+        throw error;
+      } else if (error.statusCode && error.message) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'An unexpected error occurred.',
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
+    }
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto, userId: string): Promise<IApiResponse<null>> {
+    try {
+      const user = await this.userService.findUser({
+        id: userId
+      });
+
+      if (!user) throw new NotFoundException('User not found!!');
+
+      if (resetPasswordDto.currentPassword === resetPasswordDto.newPassword) {
+        throw new BadRequestException("Please enter new password");
+      }
+
+      const currentPasswordMatch: boolean = await compare(resetPasswordDto.currentPassword, user.passwordHashed || "");
+      if (!currentPasswordMatch) {
+        throw new BadRequestException("Current password doesn't match!!");
+      }
+
+      const newPassword = await hash(resetPasswordDto.newPassword, BCRYPT_ROUNDS);
+      await this.userService.updateUser({
+        id: userId,
+        passwordHashed: newPassword
+      });
+
+      return {
+        success: true,
+        message: "Password reset completed successfully",
       };
     } catch (error) {
       console.error('Error: ', error);

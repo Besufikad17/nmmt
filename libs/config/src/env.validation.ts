@@ -31,10 +31,18 @@ const baseSchema = Joi.object({
 		.description('JWT refresh expiration time'),
 
 	// SMS Provider Configuration
-	AFRO_MESSAGE_IDENTIFIER: Joi.string().description('Afro Message identifier'),
-	AFRO_MESSAGE_SENDER: Joi.string().description('Afro Message sender'),
-	AFRO_MESSAGE_TOKEN: Joi.string().description('Afro Message token'),
-	AFRO_MESSAGE_BASE_URL: Joi.string().description('Afro Message base url'),
+	AFRO_MESSAGE_IDENTIFIER: Joi.string().required().description('Afro Message identifier'),
+	AFRO_MESSAGE_SENDER: Joi.string().required().description('Afro Message sender'),
+	AFRO_MESSAGE_TOKEN: Joi.string().required().description('Afro Message token'),
+	AFRO_MESSAGE_BASE_URL: Joi.string().required().description('Afro Message base url'),
+
+	// Redis Configuration
+	REDIS_HOST: Joi.string().required().description('Redis host'),
+	REDIS_PORT: Joi.number().required().description('Redis port'),
+	REDIS_PASSWORD: Joi.string().required().description('Redis password'),
+
+	// BullMQ Configuration
+	BULLBOARD_PASSWORD: Joi.string().required().description('Bull Board user password')
 }).unknown();
 
 export function validateEnv(config: Record<string, unknown>) {

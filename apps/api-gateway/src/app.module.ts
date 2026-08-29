@@ -5,9 +5,11 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
+import { BullBoardModule } from './bull-board/bull-board.module';
 
 @Module({
   imports: [
+    BullBoardModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],

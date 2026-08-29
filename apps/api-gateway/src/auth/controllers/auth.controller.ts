@@ -1,6 +1,6 @@
-import { Body, Controller, Headers, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Headers, HttpCode, HttpException, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { IAuthService } from '../interfaces';
-import { AuthResponse, LoginDto, SignUpDto } from '../dto/auth.dto';
+import { AuthResponse, LoginDto, ResetPasswordDto, SignUpDto } from '../dto/auth.dto';
 import { ApiOkResponseWithData } from '@app/config';
 import { EmptyBodyResponse } from '@app/common/dto/api-response.dto';
 import type { IUser } from '@app/common/interfaces';
@@ -33,7 +33,7 @@ export class AuthController {
 
   @Post("token/refresh")
   @UseGuards(JwtGuard)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.ACCEPTED)
   @ApiOkResponseWithData(AuthResponse)
   async refreshTokens(
     @Headers("authorization") auth: string,
@@ -46,11 +46,22 @@ export class AuthController {
 
   @Post("signout")
   @UseGuards(JwtGuard)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.ACCEPTED)
   @ApiOkResponseWithData(EmptyBodyResponse)
   async signOut(
     @GetCurrentUser() user: IUser
   ) {
     return await this.service.signOut(user.id);
+  }
+
+  @Post("password/reset")
+  @UseGuards(JwtGuard)
+  @HttpCode(HttpStatus.ACCEPTED)
+  @ApiOkResponseWithData(EmptyBodyResponse)
+  async resetPassword(
+    @Body() dto: ResetPasswordDto,
+    @GetCurrentUser() user: IUser
+  ) {
+    return await this.service.resetPassword(dto, user.id);
   }
 }

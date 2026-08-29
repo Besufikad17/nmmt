@@ -4,6 +4,7 @@ import { CreateUserDto, FindUserDto, UpdateUserDto } from "../dto";
 export interface IUser {
 	id: string;
 	phoneNumber: string;
+	email: string;
 	passwordHashed: string;
 	tokenVersion: number;
 	lastLogin?: Date | null;
@@ -13,14 +14,6 @@ export interface IUser {
 	createdAt: Date;
 	updatedAt: Date;
 }
-
-export type PublicUser = Omit<IUser, 'passwordHashed'>;
-
-export type CreateUserPayload = Pick<IUser, 'phoneNumber' | 'passwordHashed'>;
-
-export type UpdateUserPayload = Partial<
-	Pick<IUser, 'lastLogin' | 'status' | 'twoFactorEnabled' | 'phoneNumberVerified'>
->;
 
 export abstract class IUserService {
 	abstract createUser(createUserDto: CreateUserDto): Promise<IUser>;

@@ -1,4 +1,5 @@
 export enum OtpChannel {
+	EMAIL = 'EMAIL',
 	PHONE = 'PHONE'
 };
 

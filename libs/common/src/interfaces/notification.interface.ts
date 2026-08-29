@@ -1,3 +1,4 @@
+import { Queue } from "bullmq";
 import { CreateNotificationDto, UpdateNotificationDto } from "../dto";
 import { NotificationStatus, NotificationType } from "../enums";
 
@@ -10,6 +11,15 @@ export interface INotification {
 	status: NotificationStatus;
 	createdAt: Date;
 	updatedAt: Date;
+}
+
+export interface IQueueProvider {
+	pushNotificationQueue: Queue;
+	worker: Worker;
+}
+
+export class SendNotificationJobData extends CreateNotificationDto {
+	id: string;
 }
 
 export abstract class INotificationService {

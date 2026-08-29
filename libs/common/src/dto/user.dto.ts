@@ -8,6 +8,10 @@ export class CreateUserDto {
 
 	@IsString()
 	@IsNotEmpty()
+	readonly email: string;
+
+	@IsString()
+	@IsNotEmpty()
 	readonly password: string;
 }
 
@@ -19,6 +23,10 @@ export class UpdateUserDto {
 	@IsString()
 	@ValidateIf((obj) => obj.phoneNumber !== undefined && obj.phoneNumber !== null && obj.phoneNumber !== '')
 	readonly phoneNumber?: string;
+
+	@IsString()
+	@ValidateIf((obj) => obj.email !== undefined && obj.email !== null && obj.email !== '')
+	readonly email?: string;
 
 	@IsString()
 	@ValidateIf((obj) => obj.passwordHash !== undefined && obj.passwordHash !== null && obj.passwordHash !== '')
@@ -53,6 +61,10 @@ export class FindUserDto {
 	@IsString()
 	@ValidateIf((obj) => obj.phoneNumber !== undefined && obj.phoneNumber !== null && obj.phoneNumber !== '')
 	readonly phoneNumber?: string;
+
+	@IsString()
+	@ValidateIf((obj) => obj.email !== undefined && obj.email !== null && obj.email !== '')
+	readonly email?: string;
 }
 
 export class FindUsersDto {

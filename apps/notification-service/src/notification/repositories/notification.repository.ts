@@ -7,7 +7,7 @@ import { INotificationRepository } from "../interfaces/notification.repository.i
 @Injectable()
 export class NotificationRepository implements INotificationRepository {
   constructor(
-    @InjectRepository(Notification, 'auth') private readonly notificationRepository: Repository<Notification>
+    @InjectRepository(Notification, 'notification') private readonly notificationRepository: Repository<Notification>
   ) { }
 
   async createNotification(createNotificationArgs: DeepPartial<Notification>): Promise<Notification> {

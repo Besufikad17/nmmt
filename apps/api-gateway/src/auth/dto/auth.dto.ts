@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, IsUUID } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUUID } from "class-validator";
 import { IsValidPhoneNumber, TransformPhoneNumber } from "../validators/phone.validator";
 import { IAuthResponse } from "../interfaces";
 
@@ -17,6 +17,11 @@ export class SignUpDto {
   @TransformPhoneNumber()
   @IsValidPhoneNumber()
   readonly phoneNumber: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  readonly email: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -38,4 +43,17 @@ export class RefreshTokenDto {
   @IsNotEmpty()
   @IsString()
   currentRefreshToken: string;
+}
+
+export class ResetPasswordDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  readonly currentPassword: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @IsStrongPassword()
+  readonly newPassword: string;
 }

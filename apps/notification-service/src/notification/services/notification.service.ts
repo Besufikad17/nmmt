@@ -2,16 +2,33 @@ import { INotificationService } from '@app/common/interfaces';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { INotificationRepository } from '../interfaces/notification.repository.interface';
 import { CreateNotificationDto, UpdateNotificationDto } from '@app/common/dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 
 @Injectable()
 export class NotificationService implements INotificationService {
   constructor(
-    private readonly notificationRepository: INotificationRepository
+    private readonly notificationRepository: INotificationRepository,
+    @InjectQueue('notification') private readonly notificationQueue: Queue
   ) { }
 
   async createNotification(dto: CreateNotificationDto): Promise<void> {
     try {
-      await this.notificationRepository.createNotification({ ...dto });
+      const notification = await this.notificationRepository.createNotification({ ...dto });
+
+      await this.notificationQueue.add(
+        'new',
+        {
+          id: notification.id,
+          ...dto,
+        },
+        {
+          removeOnComplete: true,
+          removeOnFail: {
+            age: 3600
+          }
+        }
+      );
     } catch (error) {
       console.error('Error: ', error);
       if (error instanceof HttpException) {

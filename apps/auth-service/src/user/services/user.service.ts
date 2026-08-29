@@ -6,6 +6,7 @@ import { RpcException } from '@nestjs/microservices';
 import { hash } from '@app/common/utils/hash.utils';
 import { IUserService } from '@app/common/interfaces';
 import { CreateUserDto, FindUserDto, UpdateUserDto } from '@app/common/dto';
+import { BCRYPT_ROUNDS } from '@app/common/constants/strings';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -19,7 +20,7 @@ export class UserService implements IUserService {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {
       const { password, ...userWithoutPassword } = createUserDto;
-      const hashedPassword = await hash(password, 10);
+      const hashedPassword = await hash(password, BCRYPT_ROUNDS);
 
       return await this.userRepository.createUser({
         ...userWithoutPassword,
@@ -37,7 +38,6 @@ export class UserService implements IUserService {
 
   async findUser(findUserDto: FindUserDto): Promise<User | null> {
     try {
-      console.log(findUserDto);
       return await this.userRepository.findUser({
         where: { ...findUserDto }
       });
