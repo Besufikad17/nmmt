@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NotificationModule } from './notification/notification.module';
 import { SmsModule } from './sms/sms.module';
 import { BullModule } from '@nestjs/bullmq';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -34,10 +35,11 @@ import { BullModule } from '@nestjs/bullmq';
     }),
     DbModule.forRoot({
       name: 'notification',
-      uri: process.env.AUTH_DATABASE_URI!
+      uri: process.env.NOTIFICATION_DATABASE_URI!
     }),
     NotificationModule,
-    SmsModule
+    SmsModule,
+    MailModule
   ],
 })
 export class AppModule { }

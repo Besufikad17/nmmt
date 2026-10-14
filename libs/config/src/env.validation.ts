@@ -42,7 +42,12 @@ const baseSchema = Joi.object({
 	REDIS_PASSWORD: Joi.string().required().description('Redis password'),
 
 	// BullMQ Configuration
-	BULLBOARD_PASSWORD: Joi.string().required().description('Bull Board user password')
+	BULLBOARD_PASSWORD: Joi.string().required().description('Bull Board user password'),
+
+	// MAIL Configuration
+	MAIL_USER: Joi.string().required().description('Mail user'),
+	MAIL_PASS: Joi.string().required().description('Mail password'),
+	MAIL_FROM: Joi.string().optional().description('Mail from address')
 }).unknown();
 
 export function validateEnv(config: Record<string, unknown>) {

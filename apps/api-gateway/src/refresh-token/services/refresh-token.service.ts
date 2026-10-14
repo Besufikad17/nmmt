@@ -83,7 +83,8 @@ export class RefreshTokenService implements IRefreshTokenService {
         this.client.send(
           { cmd: 'deleteRefreshTokens' },
           { ...deleteRefreshTokensDto }
-        )
+        ),
+        { defaultValue: undefined }
       );
     } catch (error) {
       console.error('Error: ', error);

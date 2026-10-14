@@ -1,5 +1,5 @@
 import { IUser } from "@app/common/interfaces";
-import { UserStatus } from "@app/common/enums";
+import { UserStatus, UserTwoFactorMethod } from "@app/common/enums";
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
 import { RefreshToken } from "../../refresh-token/entities/refresh-token.entity";
 import { Otp } from "../../otp/entities/otp.entity";
@@ -25,7 +25,7 @@ export class User implements IUser {
 	lastLogin?: Date;
 
 	@Column({
-		type: "enum",
+		type: 'enum',
 		enum: UserStatus,
 		default: UserStatus.PENDING
 	})
@@ -33,6 +33,14 @@ export class User implements IUser {
 
 	@Column({ name: 'two_factor_enabled', default: false })
 	twoFactorEnabled: boolean;
+
+	@Column({
+		type: 'enum',
+		name: 'two_factor_method',
+		default: UserTwoFactorMethod.EMAIL,
+		enum: UserTwoFactorMethod
+	})
+	twoFactorMethod: UserTwoFactorMethod;
 
 	@Column({ name: 'phone_number_verified', default: false })
 	phoneNumberVerified: boolean;

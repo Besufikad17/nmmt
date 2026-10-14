@@ -1,5 +1,5 @@
 import { IApiResponse } from "@app/common/interfaces";
-import { LoginDto, RefreshTokenDto, ResetPasswordDto, SignUpDto } from "../dto/auth.dto";
+import { LoginDto, RefreshTokenDto, ResetPasswordDto, SignUpDto, UpdateTwoFactorDto } from "../dto/auth.dto";
 
 export interface IAuthResponse {
   accessToken: string;
@@ -12,4 +12,5 @@ export abstract class IAuthService {
   abstract refreshToken(refreshTokenDto: RefreshTokenDto): Promise<IApiResponse<IAuthResponse>>;
   abstract signOut(userId: string): Promise<IApiResponse<null>>;
   abstract resetPassword(resetPasswordDto: ResetPasswordDto, userId: string): Promise<IApiResponse<null>>;
+  abstract updateTwoFactor(updateTwoFactorDto: UpdateTwoFactorDto, userId: string): Promise<IApiResponse<null>>;
 }

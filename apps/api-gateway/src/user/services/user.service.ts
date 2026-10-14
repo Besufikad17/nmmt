@@ -56,11 +56,12 @@ export class UserService implements IUserService {
 
   async updateUser(updateUserDto: UpdateUserDto): Promise<void> {
     try {
-      firstValueFrom(
+      await firstValueFrom(
         this.client.send(
           { cmd: 'updateUser' },
           { ...updateUserDto }
-        )
+        ),
+        { defaultValue: undefined }
       );
     } catch (error) {
       console.error('Error: ', error);

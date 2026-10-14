@@ -1,6 +1,7 @@
-import { Body, Controller, Headers, HttpCode, HttpException, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Headers, HttpCode, HttpException, HttpStatus, Patch, Post, UseGuards } from '@nestjs/common';
 import { IAuthService } from '../interfaces';
-import { AuthResponse, LoginDto, ResetPasswordDto, SignUpDto } from '../dto/auth.dto';
+import { AuthResponse, LoginDto, ResetPasswordDto, SignUpDto, UpdateTwoFactorDto } from '../dto/auth.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { ApiOkResponseWithData } from '@app/config';
 import { EmptyBodyResponse } from '@app/common/dto/api-response.dto';
 import type { IUser } from '@app/common/interfaces';
@@ -33,6 +34,7 @@ export class AuthController {
 
   @Post("token/refresh")
   @UseGuards(JwtGuard)
+  @ApiBearerAuth('JWT-auth')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOkResponseWithData(AuthResponse)
   async refreshTokens(
@@ -46,6 +48,7 @@ export class AuthController {
 
   @Post("signout")
   @UseGuards(JwtGuard)
+  @ApiBearerAuth('JWT-auth')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOkResponseWithData(EmptyBodyResponse)
   async signOut(
@@ -56,6 +59,7 @@ export class AuthController {
 
   @Post("password/reset")
   @UseGuards(JwtGuard)
+  @ApiBearerAuth('JWT-auth')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOkResponseWithData(EmptyBodyResponse)
   async resetPassword(
@@ -63,5 +67,17 @@ export class AuthController {
     @GetCurrentUser() user: IUser
   ) {
     return await this.service.resetPassword(dto, user.id);
+  }
+
+  @Patch('2fa')
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth('JWT-auth')
+  @HttpCode(HttpStatus.ACCEPTED)
+  @ApiOkResponseWithData(EmptyBodyResponse)
+  async updateTwoFactor(
+    @Body() dto: UpdateTwoFactorDto,
+    @GetCurrentUser() user: IUser
+  ) {
+    return await this.service.updateTwoFactor(dto, user.id);
   }
 }

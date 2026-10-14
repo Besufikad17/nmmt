@@ -3,3 +3,8 @@ export enum UserStatus {
 	DEACTIVATED = 'DEACTIVATED',
 	PENDING = 'PENDING',
 }
+
+export enum UserTwoFactorMethod {
+	EMAIL = 'EMAIL',
+	SMS = 'SMS'
+}

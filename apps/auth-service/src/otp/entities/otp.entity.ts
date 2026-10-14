@@ -1,6 +1,6 @@
-import { OtpChannel, OtpPurpose } from "@app/common/enums";
+import { OtpChannel, OtpPurpose, OtpStatus } from "@app/common/enums";
 import { IOtp } from "@app/common/interfaces";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 
 @Entity({ database: 'auth' })
@@ -26,16 +26,23 @@ export class Otp implements IOtp {
   @Column({ type: 'enum', enum: OtpPurpose })
   purpose: OtpPurpose;
 
+  @Column({
+    type: 'enum',
+    enum: OtpStatus,
+    default: OtpStatus.PENDING
+  })
+  status: OtpStatus;
+
   @Column({ default: 0 })
   attempts: number;
 
   @Column({ name: 'expires_at' })
   expiresAt: Date;
 
-  @Column({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Column({ name: 'updated_at' })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.otps)

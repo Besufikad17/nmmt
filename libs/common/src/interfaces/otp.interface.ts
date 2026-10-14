@@ -1,5 +1,5 @@
-import { RequestOtpDto } from "../dto";
-import { OtpChannel, OtpPurpose } from "../enums";
+import { GetOtpDto, RequestOtpDto } from "../dto";
+import { OtpChannel, OtpPurpose, OtpStatus } from "../enums";
 import { IApiResponse } from "./api.response.interface";
 
 export interface IOtp {
@@ -10,6 +10,7 @@ export interface IOtp {
 	target: string;
 	channel: OtpChannel;
 	purpose: OtpPurpose;
+	status: OtpStatus;
 	attempts: number;
 	expiresAt: Date;
 	createdAt: Date;
@@ -18,4 +19,5 @@ export interface IOtp {
 
 export abstract class IOtpService {
 	abstract requestOtp(dto: RequestOtpDto, userId?: string): Promise<IApiResponse<null>>;
+	abstract getOtp(dto: GetOtpDto): Promise<IOtp | null>;
 }

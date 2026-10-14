@@ -1,5 +1,5 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { LoginDto, RefreshTokenDto, ResetPasswordDto, SignUpDto } from '../dto/auth.dto';
+import { LoginDto, RefreshTokenDto, ResetPasswordDto, SignUpDto, UpdateTwoFactorDto } from '../dto/auth.dto';
 import { IAuthResponse, IAuthService } from '../interfaces';
 import { compare, hash } from '@app/common/utils/hash.utils';
 import { UserService } from '../../user/services/user.service';
@@ -8,10 +8,15 @@ import { decodeToken } from '@app/common/utils/jwt.utils';
 import { IApiResponse } from '@app/common/interfaces';
 import { RefreshTokenService } from '../../refresh-token/services/refresh-token.service';
 import { BCRYPT_ROUNDS } from '@app/common/constants/strings';
+import { OtpChannel, OtpPurpose, UserTwoFactorMethod } from '@app/common/enums';
+import { OtpService } from '../../otp/services/otp.service';
+import { addMinutes } from '@app/common/utils/time.utils';
+import { UpdateUserDto } from '@app/common/dto';
 
 @Injectable()
 export class AuthService implements IAuthService {
   constructor(
+    private readonly otpService: OtpService,
     private readonly refreshTokenService: RefreshTokenService,
     private readonly tokenService: ITokenService,
     private readonly userService: UserService
@@ -166,6 +171,19 @@ export class AuthService implements IAuthService {
       });
 
       if (!user) throw new NotFoundException('User not found!!');
+      const { twoFactorEnabled, twoFactorMethod } = user;
+
+      if (twoFactorEnabled) {
+        const otp = await this.otpService.getOtp({
+          target: twoFactorMethod === UserTwoFactorMethod.EMAIL ? user.email! : user.phoneNumber!,
+          purpose: OtpPurpose.PASSWORD_RESET,
+          channel: twoFactorMethod === UserTwoFactorMethod.EMAIL ? OtpChannel.EMAIL : OtpChannel.PHONE
+        });
+
+        if (!otp || otp.status !== "VERIFIED" || otp.updatedAt < addMinutes(new Date(), -3)) {
+          throw new BadRequestException("Please verify your account first");
+        }
+      }
 
       if (resetPasswordDto.currentPassword === resetPasswordDto.newPassword) {
         throw new BadRequestException("Please enter new password");
@@ -185,6 +203,32 @@ export class AuthService implements IAuthService {
       return {
         success: true,
         message: "Password reset completed successfully",
+      };
+    } catch (error) {
+      console.error('Error: ', error);
+      if (error instanceof HttpException) {
+        throw error;
+      } else if (error.statusCode && error.message) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'An unexpected error occurred.',
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
+    }
+  }
+
+  async updateTwoFactor(updateTwoFactorDto: UpdateTwoFactorDto, userId: string): Promise<IApiResponse<null>> {
+    try {
+      await this.userService.updateUser({
+        id: userId,
+        ...updateTwoFactorDto
+      });
+
+      return {
+        success: true,
+        message: 'Two factor status updated'
       };
     } catch (error) {
       console.error('Error: ', error);

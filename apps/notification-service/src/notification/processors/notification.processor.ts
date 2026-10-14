@@ -1,10 +1,12 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
-import { Logger } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { INotificationRepository } from '../interfaces';
 import { SendNotificationJobData } from '@app/common/interfaces';
 import { NotificationStatus, NotificationType } from '@app/common/enums';
-import { SmsService } from '../../sms/services/sms.service';
+import { ISMService } from '../../sms/interfaces';
+import { IMailService } from '../../mail/interfaces';
+import { getEmailHtml } from '@app/common/utils/mail.utils';
 
 interface NotificationJobResult {
   success: boolean;
@@ -21,14 +23,15 @@ export class NotificationProcessor extends WorkerHost {
   private readonly logger = new Logger(NotificationProcessor.name);
   constructor(
     private readonly notificationRepository: INotificationRepository,
-    private readonly smsService: SmsService
+    @Inject(IMailService) private readonly mailService: IMailService,
+    @Inject(ISMService) private readonly smsService: ISMService
   ) {
     super()
   }
 
   async process(job: NotificationJob): Promise<void> {
     this.logger.debug('Start processing notifications...');
-    const { message, type, target } = job.data;
+    const { message, title, type, target } = job.data;
 
     switch (type) {
       case NotificationType.SMS: {
@@ -38,9 +41,17 @@ export class NotificationProcessor extends WorkerHost {
         });
         break;
       }
-
+      case NotificationType.EMAIL: {
+        await this.mailService.sendEmail({
+          to: target,
+          subject: title,
+          body: message,
+          html: getEmailHtml(message)
+        });
+        break;
+      }
       default:
-        return;
+        throw new Error(`Unsupported notification type: ${type}`);
     }
 
     this.logger.debug('Notification sent')

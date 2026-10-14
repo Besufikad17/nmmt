@@ -1,4 +1,4 @@
-import { JwtPayload, User } from "@app/common/interfaces";
+import { IUser, JwtPayload } from "@app/common/interfaces";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<User> {
+  async validate(payload: JwtPayload): Promise<IUser> {
     const user = await this.userService.findUser({
       id: payload.sub,
     });
@@ -30,6 +30,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
       throw new Error('Unauthoized');
     }
 
-    return { id: user.id };
+    return user;
   }
 }

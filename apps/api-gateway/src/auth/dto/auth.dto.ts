@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUUID } from "class-validator";
+import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsString, IsStrongPassword, IsUUID, ValidateIf } from "class-validator";
 import { IsValidPhoneNumber, TransformPhoneNumber } from "../validators/phone.validator";
 import { IAuthResponse } from "../interfaces";
+import { UserTwoFactorMethod } from "@app/common/enums";
 
 export class AuthResponse implements IAuthResponse {
   @ApiProperty({ description: "JWT access token" })
@@ -29,7 +30,22 @@ export class SignUpDto {
   readonly password: string;
 }
 
-export class LoginDto extends SignUpDto { }
+export class LoginDto {
+  @ApiProperty()
+  @IsEmail()
+  @ValidateIf((obj) => obj.email !== undefined && obj.email !== null && obj.email !== "")
+  readonly email?: string;
+
+  @ApiProperty()
+  @IsString()
+  @ValidateIf((obj) => obj.phoneNumber !== undefined && obj.phoneNumber !== null && obj.phoneNumber !== "")
+  readonly phoneNumber?: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  readonly password: string;
+}
 
 export class RefreshTokenDto {
   @IsNotEmpty()
@@ -56,4 +72,16 @@ export class ResetPasswordDto {
   @IsString()
   @IsStrongPassword()
   readonly newPassword: string;
+}
+
+export class UpdateTwoFactorDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsBoolean()
+  twoFactorEnabled: boolean;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEnum(UserTwoFactorMethod)
+  twoFactorMethod: UserTwoFactorMethod;
 }

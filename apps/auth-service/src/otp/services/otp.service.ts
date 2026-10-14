@@ -1,8 +1,8 @@
 import { LoggerService } from '@app/common';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { IOtpRepository } from '../interfaces';
-import { IApiResponse, IOtpService } from '@app/common/interfaces';
-import { RequestOtpDto } from '@app/common/dto';
+import { IApiResponse, IOtp, IOtpService } from '@app/common/interfaces';
+import { GetOtpDto, RequestOtpDto } from '@app/common/dto';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { BCRYPT_ROUNDS, OTP_EXPIRY_MINUTES, OTP_LENGTH } from '@app/common/constants/strings';
 import { hash } from '@app/common/utils/hash.utils';
@@ -44,9 +44,10 @@ export class OtpService implements IOtpService {
             type: channel === OtpChannel.EMAIL ?
               NotificationType.EMAIL : NotificationType.SMS,
             title: purpose,
-            message: `Verify ${purpose.replaceAll('_', ' ').toLowerCase()} action`
+            message: `Verify ${purpose.replaceAll('_', ' ').toLowerCase()} action with this otp code ${otp}`
           }
-        )
+        ),
+        { defaultValue: undefined }
       );
 
       return {
@@ -54,7 +55,22 @@ export class OtpService implements IOtpService {
         success: true
       };
     } catch (error) {
-      this.logger.error(error.message || 'Failed to create user!!');
+      this.logger.error(error.message || 'Failed to create otp!!');
+      throw new RpcException({
+        message: 'Failed to create otp!!',
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        meta: {}
+      });
+    }
+  }
+
+  async getOtp(dto: GetOtpDto): Promise<IOtp | null> {
+    try {
+      return await this.otpRepository.findOtp({
+        where: { ...dto }
+      });
+    } catch (error) {
+      this.logger.error(error.message || 'Failed to fetch otp!!');
       throw new RpcException({
         message: 'Failed to create user!!',
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,

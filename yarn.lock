@@ -346,6 +346,78 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@css-inline/css-inline-android-arm-eabi@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-android-arm-eabi/-/css-inline-android-arm-eabi-0.22.0.tgz#460b9a4508a56dcf058bf1f72edd3740d9d0026d"
+  integrity sha512-SAKnj3t5SpO5WOP6mSt+LQ+bANcXgx05oS/pEjWugfA5yM4Gcfsu6vqqZIljZSgfwxomGj9KJZvyUCvUzcL88w==
+
+"@css-inline/css-inline-android-arm64@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-android-arm64/-/css-inline-android-arm64-0.22.0.tgz#0b75b2e827d3249cadcb4375db06765780c406ac"
+  integrity sha512-MGCtmZXsM1zqR16LLKYrCQHrrDLEMBPiFaImGFKHZpUgH7LF/wH94QjD0LyryPDbkbEz2qbJ8CCkIx1oQN1jAQ==
+
+"@css-inline/css-inline-darwin-arm64@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-darwin-arm64/-/css-inline-darwin-arm64-0.22.0.tgz#51369b4b857a7451453336a548c433ee0beb1a1b"
+  integrity sha512-/1536wbgC3ajWE/wQpQMrO+es+dCZ6ApYusjSTu+D4wA9c+WQTmc5wT1og09P8FTGzP0y/N2Mec9AsYB2yL1FA==
+
+"@css-inline/css-inline-darwin-x64@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-darwin-x64/-/css-inline-darwin-x64-0.22.0.tgz#7ed97b919d319c22435b7af2a9f3d793a65f5fbb"
+  integrity sha512-99PM7DCxDQ6yzmlM7BrsTJKauGx0D5WGm70DEIBlhI87it7rax0i2kyykV/xgojOihttR4EbzF1jv9opvKpn+A==
+
+"@css-inline/css-inline-linux-arm-gnueabihf@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-linux-arm-gnueabihf/-/css-inline-linux-arm-gnueabihf-0.22.0.tgz#1f5d32101f5711a8f2895642d24ede33a3adc7b4"
+  integrity sha512-5QBP5gunVeQvM2dcirBgSPgeS7hxN5fZO+VGtp1meVw8zArP40MFhnC0yPqt6kCVUjVgchBmYy8PmA/iLS4a+w==
+
+"@css-inline/css-inline-linux-arm64-gnu@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-linux-arm64-gnu/-/css-inline-linux-arm64-gnu-0.22.0.tgz#abaa249d2ba67e61a368256a98a5d4bbaabc30db"
+  integrity sha512-UMmZr5kJOZ67LbBZZsGdD2mPhCDGwfCj3/Aaw2srY3lc99HiGAqQ4qgjd9sOI7W85kmBmUEqnf/X60JOJsAhWw==
+
+"@css-inline/css-inline-linux-arm64-musl@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-linux-arm64-musl/-/css-inline-linux-arm64-musl-0.22.0.tgz#45905fbaa0035be67f2f0022c0b1039c745e67ba"
+  integrity sha512-QgeTwJtVibEE4NN1vDu5xRPrQNWedUyfQyCHxlsh6vdXY8nZ9cd9iFa4aguqaAi7ljr6gkjAFuERHULSjynLJg==
+
+"@css-inline/css-inline-linux-x64-gnu@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-linux-x64-gnu/-/css-inline-linux-x64-gnu-0.22.0.tgz#1ac9c3c0ca365d03124ff13b9c638c038fa9639f"
+  integrity sha512-l8QAh5/zEdYNlS1Ctqi/0D9tDXhEic9w9ou7FTxmQjMirAg2+oUmiraqWNnZr0YeYySPN500XHbCKDGq9ACYRg==
+
+"@css-inline/css-inline-linux-x64-musl@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-linux-x64-musl/-/css-inline-linux-x64-musl-0.22.0.tgz#f6b212affc348d40925cd85b5bf71ad2ba7fd223"
+  integrity sha512-9LcUU2ZJl7VGfcCa6LGCeGQsnUomLgcxJvbnCWiSH7A8iP1O5tZ2HWIj9j8zpCEHciBwn9WklWewZ4gP0ZlB9A==
+
+"@css-inline/css-inline-win32-arm64-msvc@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-win32-arm64-msvc/-/css-inline-win32-arm64-msvc-0.22.0.tgz#4e0661ac30b33bd8b360a8c54eec0c751a35a51d"
+  integrity sha512-Sn2F+N3NiMFkho6r4JGgdkiwGmjR9tzUY+pSQ3Jtosruos7rF0qtCBSycu2O3Kceuf/rWaKi3H0q0TnjrSYRVw==
+
+"@css-inline/css-inline-win32-x64-msvc@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline-win32-x64-msvc/-/css-inline-win32-x64-msvc-0.22.0.tgz#62333c5234e0baf394c1db0473ed5c1602a4d2eb"
+  integrity sha512-3K87N3QCyznTOuU4gZA3kkVlDSp5niKHTVL/7GtlkSLJQYb6s0ZfKxxBD8AUrOyajd4iYWyWsr8HM/Rs+BdUlg==
+
+"@css-inline/css-inline@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.npmmirror.com/@css-inline/css-inline/-/css-inline-0.22.0.tgz#4b507fc86daee1a3e75201523a29811aafee1394"
+  integrity sha512-C1vALHUS02Vv8dBoH07A1fQG7F0Mf/SG7cfQw2BX0eHmUgw+rjWrW/hedP1CGNoBLjGVvBDyjYfVOSjgLdm18w==
+  optionalDependencies:
+    "@css-inline/css-inline-android-arm-eabi" "0.22.0"
+    "@css-inline/css-inline-android-arm64" "0.22.0"
+    "@css-inline/css-inline-darwin-arm64" "0.22.0"
+    "@css-inline/css-inline-darwin-x64" "0.22.0"
+    "@css-inline/css-inline-linux-arm-gnueabihf" "0.22.0"
+    "@css-inline/css-inline-linux-arm64-gnu" "0.22.0"
+    "@css-inline/css-inline-linux-arm64-musl" "0.22.0"
+    "@css-inline/css-inline-linux-x64-gnu" "0.22.0"
+    "@css-inline/css-inline-linux-x64-musl" "0.22.0"
+    "@css-inline/css-inline-win32-arm64-msvc" "0.22.0"
+    "@css-inline/css-inline-win32-x64-msvc" "0.22.0"
+
 "@emnapi/core@^1.4.3":
   version "1.10.0"
   resolved "https://registry.npmmirror.com/@emnapi/core/-/core-1.10.0.tgz#380ccc8f2412ea22d1d972df7f8ee23a3b9c7467"
@@ -1013,6 +1085,15 @@
     "@emnapi/runtime" "^1.4.3"
     "@tybys/wasm-util" "^0.10.0"
 
+"@nestjs-modules/mailer@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.npmmirror.com/@nestjs-modules/mailer/-/mailer-3.0.2.tgz#2125d70f04077b17f7faf038379f6edfdecb5fa1"
+  integrity sha512-029fQd7UrTGNr+WogAgTUw5UHYCSLpnbQW7y5Ueyp6LZtAZssOjwqGcDqfYijNdxNKI8wdcBUfhVoOh39L+Z5w==
+  dependencies:
+    "@css-inline/css-inline" "0.22.0"
+    glob "13.0.6"
+    tslib "^2.8.1"
+
 "@nestjs/bull-shared@^11.0.4":
   version "11.0.4"
   resolved "https://registry.npmmirror.com/@nestjs/bull-shared/-/bull-shared-11.0.4.tgz#6179bb0a0ae705193a113ea60021d28732c6038d"
@@ -1425,6 +1506,13 @@
   integrity sha512-dyh/xO2Fh5bYrfWaaqGrRQQGkNdmYw6AmaAUvYeUMNTWQtvb796ikLdmTchRmOlOiIJ1TDXfWgVx1QkUlQ6Hew==
   dependencies:
     undici-types "~6.21.0"
+
+"@types/nodemailer@^8.0.2":
+  version "8.0.2"
+  resolved "https://registry.npmmirror.com/@types/nodemailer/-/nodemailer-8.0.2.tgz#0f57798b2753dbad314f1ad9952713a4a9954f12"
+  integrity sha512-c7M5ox8p0nEOfbJ2E9Qcmt8/QCu/VzsiAhzBiZbvky2PhKZDHpKB3sQHBM5MEZNkCfBOaS6S9//AGPRTNB7IaA==
+  dependencies:
+    "@types/node" "*"
 
 "@types/passport-jwt@^4.0.1":
   version "4.0.1"
@@ -4359,6 +4447,11 @@ node-releases@^2.0.36:
   version "2.0.44"
   resolved "https://registry.npmmirror.com/node-releases/-/node-releases-2.0.44.tgz#212c9b983f5bb70d311dd68c27d55dd0e65d1ca7"
   integrity sha512-5WUyunoPMsvvEhS8AxHtRzP+oA8UCkJ7YRxatWKjngndhDGLiqEVAQKWjFAiAiuL8zMRGzGSJxFnLetoa43qGQ==
+
+nodemailer@^10.1.1:
+  version "10.1.1"
+  resolved "https://registry.npmmirror.com/nodemailer/-/nodemailer-10.1.1.tgz#c2cc02c3aef8a1697bae6501d362a594551fdd6b"
+  integrity sha512-pbqZRoeYUO+1E8TJ/11WeY4D2EVujj1hsYjz3qff/vUFDtGnmi7p3iqzTFslYOfQ6PnjVcWxx/CIUSHCSrO/QA==
 
 normalize-path@^3.0.0:
   version "3.0.0"

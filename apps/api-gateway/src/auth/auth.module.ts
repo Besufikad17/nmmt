@@ -8,6 +8,7 @@ import { UserModule } from '../user/user.module';
 import { IAuthService } from './interfaces';
 import { ITokenService } from './interfaces/toke.service.interface';
 import { TokenService } from './services/token.service';
+import { OtpModule } from '../otp/otp.module';
 
 @Module({
   providers: [
@@ -30,6 +31,7 @@ import { TokenService } from './services/token.service';
         };
       },
     }),
+    OtpModule,
     RefreshTokenModule,
     UserModule
   ]

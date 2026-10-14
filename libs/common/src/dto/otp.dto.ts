@@ -18,3 +18,5 @@ export class RequestOtpDto {
 	@IsEnum(OtpPurpose)
 	readonly purpose: OtpPurpose;
 }
+
+export class GetOtpDto extends RequestOtpDto { }

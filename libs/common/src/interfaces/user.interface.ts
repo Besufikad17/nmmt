@@ -1,4 +1,4 @@
-import { UserStatus } from '../enums';
+import { UserStatus, UserTwoFactorMethod } from '../enums';
 import { CreateUserDto, FindUserDto, UpdateUserDto } from "../dto";
 
 export interface IUser {
@@ -10,6 +10,7 @@ export interface IUser {
 	lastLogin?: Date | null;
 	status: UserStatus;
 	twoFactorEnabled: boolean;
+	twoFactorMethod: UserTwoFactorMethod;
 	phoneNumberVerified: boolean;
 	createdAt: Date;
 	updatedAt: Date;
