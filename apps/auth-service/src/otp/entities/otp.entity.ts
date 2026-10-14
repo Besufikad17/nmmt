@@ -33,7 +33,7 @@ export class Otp implements IOtp {
   })
   status: OtpStatus;
 
-  @Column({ default: 0 })
+  @Column({ default: 5 })
   attempts: number;
 
   @Column({ name: 'expires_at' })

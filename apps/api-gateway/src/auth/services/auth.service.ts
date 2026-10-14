@@ -8,7 +8,7 @@ import { decodeToken } from '@app/common/utils/jwt.utils';
 import { IApiResponse } from '@app/common/interfaces';
 import { RefreshTokenService } from '../../refresh-token/services/refresh-token.service';
 import { BCRYPT_ROUNDS } from '@app/common/constants/strings';
-import { OtpChannel, OtpPurpose, UserTwoFactorMethod } from '@app/common/enums';
+import { OtpChannel, OtpPurpose, OtpStatus, UserTwoFactorMethod } from '@app/common/enums';
 import { OtpService } from '../../otp/services/otp.service';
 import { addMinutes } from '@app/common/utils/time.utils';
 import { UpdateUserDto } from '@app/common/dto';
@@ -180,7 +180,7 @@ export class AuthService implements IAuthService {
           channel: twoFactorMethod === UserTwoFactorMethod.EMAIL ? OtpChannel.EMAIL : OtpChannel.PHONE
         });
 
-        if (!otp || otp.status !== "VERIFIED" || otp.updatedAt < addMinutes(new Date(), -3)) {
+        if (!otp || otp.status !== OtpStatus.VERIFIED || otp.updatedAt < addMinutes(new Date(), -3)) {
           throw new BadRequestException("Please verify your account first");
         }
       }

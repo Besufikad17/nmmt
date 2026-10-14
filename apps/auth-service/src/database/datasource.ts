@@ -12,4 +12,8 @@ export default new DataSource({
   migrations: ['apps/auth-service/src/database/migrations/*.ts'],
   synchronize: false,
   logging: process.env.NODE_ENV === 'development',
+  invalidWhereValuesBehavior: {
+    null: 'ignore',
+    undefined: 'ignore'
+  }
 });

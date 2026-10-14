@@ -44,7 +44,7 @@ export class NotificationProcessor extends WorkerHost {
       case NotificationType.EMAIL: {
         await this.mailService.sendEmail({
           to: target,
-          subject: title,
+          subject: title.toLowerCase().replaceAll('_', ' '),
           body: message,
           html: getEmailHtml(message)
         });

@@ -17,7 +17,11 @@ import { OtpModule } from './otp/otp.module';
     CommonModule.forRoot(),
     DbModule.forRoot({
       name: 'auth',
-      uri: process.env.AUTH_DATABASE_URI!
+      uri: process.env.AUTH_DATABASE_URI!,
+      invalidWhereValuesBehavior: {
+        null: 'ignore',
+        undefined: 'ignore',
+      },
     }),
     UserModule,
     RefreshTokenModule,

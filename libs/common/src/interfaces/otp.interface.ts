@@ -1,4 +1,4 @@
-import { GetOtpDto, RequestOtpDto } from "../dto";
+import { GetOtpDto, RequestOtpDto, ResendOtpDto, VerifyOtpDto } from "../dto";
 import { OtpChannel, OtpPurpose, OtpStatus } from "../enums";
 import { IApiResponse } from "./api.response.interface";
 
@@ -20,4 +20,6 @@ export interface IOtp {
 export abstract class IOtpService {
 	abstract requestOtp(dto: RequestOtpDto, userId?: string): Promise<IApiResponse<null>>;
 	abstract getOtp(dto: GetOtpDto): Promise<IOtp | null>;
+	abstract resendOtp(resendOtpDto: ResendOtpDto, userId?: string): Promise<IApiResponse<null>>;
+	abstract verifyOtp(verifyOtpDto: VerifyOtpDto, userId?: string): Promise<IApiResponse<null>>;
 }

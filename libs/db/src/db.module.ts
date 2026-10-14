@@ -7,6 +7,10 @@ export interface DbConnectionOptions {
   uri: string;
   synchronize?: boolean;
   logging?: boolean;
+  invalidWhereValuesBehavior?: {
+    null?: 'ignore' | 'sql-null' | 'throw';
+    undefined?: 'ignore' | 'throw';
+  };
 }
 
 @Global()
@@ -25,6 +29,7 @@ export class DbModule {
             autoLoadEntities: true,
             synchronize: options.synchronize,
             logging: options.logging,
+            invalidWhereValuesBehavior: options.invalidWhereValuesBehavior,
           }),
         }),
       ],

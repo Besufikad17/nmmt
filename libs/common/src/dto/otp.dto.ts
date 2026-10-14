@@ -20,3 +20,21 @@ export class RequestOtpDto {
 }
 
 export class GetOtpDto extends RequestOtpDto { }
+
+export class ResendOtpDto extends RequestOtpDto { }
+
+export class VerifyOtpDto {
+	@ApiProperty()
+	@IsNotEmpty()
+	readonly target: string;
+
+	@ApiProperty()
+	@IsNotEmpty()
+	@IsString()
+	readonly otpCode: string;
+
+	@ApiProperty({ enum: OtpPurpose })
+	@IsEnum(OtpPurpose)
+	@IsNotEmpty()
+	readonly purpose: OtpPurpose;
+}

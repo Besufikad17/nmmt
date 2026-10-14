@@ -1,4 +1,4 @@
-import { RequestOtpDto } from '@app/common/dto';
+import { RequestOtpDto, ResendOtpDto, VerifyOtpDto } from '@app/common/dto';
 import { EmptyBodyResponse } from '@app/common/dto/api-response.dto';
 import { ApiOkResponseWithData } from '@app/config';
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
@@ -17,5 +17,23 @@ export class OtpController {
     @Body() dto: RequestOtpDto
   ) {
     return await this.service.requestOtp(dto);
+  }
+
+  @Post('resend')
+  @ApiOkResponseWithData(EmptyBodyResponse)
+  @HttpCode(HttpStatus.CREATED)
+  async resendOtp(
+    @Body() dto: ResendOtpDto
+  ) {
+    return await this.service.resendOtp(dto);
+  }
+
+  @Post('verify')
+  @ApiOkResponseWithData(EmptyBodyResponse)
+  @HttpCode(HttpStatus.ACCEPTED)
+  async verifyOtp(
+    @Body() dto: VerifyOtpDto
+  ) {
+    return await this.service.verifyOtp(dto);
   }
 }
