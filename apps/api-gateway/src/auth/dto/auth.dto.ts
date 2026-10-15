@@ -85,3 +85,16 @@ export class UpdateTwoFactorDto {
   @IsEnum(UserTwoFactorMethod)
   twoFactorMethod: UserTwoFactorMethod;
 }
+
+export class RecoverAccountDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  readonly target: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @IsStrongPassword()
+  readonly newPassword: string;
+}

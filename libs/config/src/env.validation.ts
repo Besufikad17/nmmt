@@ -47,7 +47,11 @@ const baseSchema = Joi.object({
 	// MAIL Configuration
 	MAIL_USER: Joi.string().required().description('Mail user'),
 	MAIL_PASS: Joi.string().required().description('Mail password'),
-	MAIL_FROM: Joi.string().optional().description('Mail from address')
+	MAIL_FROM: Joi.string().optional().description('Mail from address'),
+
+	// Rate limit configuration
+	RATE_LIMIT_MODE: Joi.string().required().description('Rate limit mode'),
+	RATE_LIMIT_ENABLED_GROUPS: Joi.string().required().description('Rate limit groups')
 }).unknown();
 
 export function validateEnv(config: Record<string, unknown>) {

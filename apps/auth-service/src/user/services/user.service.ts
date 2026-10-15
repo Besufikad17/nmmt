@@ -39,7 +39,7 @@ export class UserService implements IUserService {
   async findUser(findUserDto: FindUserDto): Promise<User | null> {
     try {
       return await this.userRepository.findUser({
-        where: { ...findUserDto }
+        ...findUserDto
       });
     } catch (error) {
       this.logger.error(error.message || 'Failed to create user!!');

@@ -1,5 +1,5 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { LoginDto, RefreshTokenDto, ResetPasswordDto, SignUpDto, UpdateTwoFactorDto } from '../dto/auth.dto';
+import { LoginDto, RecoverAccountDto, RefreshTokenDto, ResetPasswordDto, SignUpDto, UpdateTwoFactorDto } from '../dto/auth.dto';
 import { IAuthResponse, IAuthService } from '../interfaces';
 import { compare, hash } from '@app/common/utils/hash.utils';
 import { UserService } from '../../user/services/user.service';
@@ -25,7 +25,7 @@ export class AuthService implements IAuthService {
   async login(loginDto: LoginDto): Promise<IApiResponse<IAuthResponse>> {
     try {
       const { phoneNumber, password } = loginDto;
-      const user = await this.userService.findUser({ phoneNumber });
+      const user = await this.userService.findUser({ where: { phoneNumber } });
       if (!user) throw new BadRequestException('Invalid credentials!!');
 
       const { id, passwordHashed } = user;
@@ -66,7 +66,7 @@ export class AuthService implements IAuthService {
   async signUp(signUpDto: SignUpDto): Promise<IApiResponse<null>> {
     try {
       const { phoneNumber } = signUpDto;
-      const user = await this.userService.findUser({ phoneNumber });
+      const user = await this.userService.findUser({ where: { phoneNumber } });
       if (user) {
         throw new NotFoundException("User already exists with this credentials");
       }
@@ -97,7 +97,7 @@ export class AuthService implements IAuthService {
       const { userId, currentRefreshToken } = refreshTokenDto;
 
       const user = await this.userService.findUser({
-        id: userId
+        where: { id: userId }
       });
 
       if (!user) throw new NotFoundException('User not found!!');
@@ -134,7 +134,7 @@ export class AuthService implements IAuthService {
   async signOut(userId: string): Promise<IApiResponse<null>> {
     try {
       const user = await this.userService.findUser({
-        id: userId
+        where: { id: userId }
       });
 
       if (!user) throw new NotFoundException('User not found!!');
@@ -167,7 +167,7 @@ export class AuthService implements IAuthService {
   async resetPassword(resetPasswordDto: ResetPasswordDto, userId: string): Promise<IApiResponse<null>> {
     try {
       const user = await this.userService.findUser({
-        id: userId
+        where: { id: userId }
       });
 
       if (!user) throw new NotFoundException('User not found!!');
@@ -181,7 +181,7 @@ export class AuthService implements IAuthService {
         });
 
         if (!otp || otp.status !== OtpStatus.VERIFIED || otp.updatedAt < addMinutes(new Date(), -3)) {
-          throw new BadRequestException("Please verify your account first");
+          throw new BadRequestException("Please verify your action first");
         }
       }
 
@@ -229,6 +229,57 @@ export class AuthService implements IAuthService {
       return {
         success: true,
         message: 'Two factor status updated'
+      };
+    } catch (error) {
+      console.error('Error: ', error);
+      if (error instanceof HttpException) {
+        throw error;
+      } else if (error.statusCode && error.message) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'An unexpected error occurred.',
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
+    }
+  }
+
+  async recoverAccount(recoverAccountDto: RecoverAccountDto): Promise<IApiResponse<null>> {
+    try {
+      const { target, newPassword } = recoverAccountDto;
+      const user = await this.userService.findUser({
+        where: [
+          { phoneNumber: target },
+          { email: target }
+        ]
+      });
+
+      if (!user) throw new NotFoundException('User not found!!');
+
+      const { id, twoFactorEnabled, twoFactorMethod } = user;
+
+      if (twoFactorEnabled) {
+        const otp = await this.otpService.getOtp({
+          target: twoFactorMethod === UserTwoFactorMethod.EMAIL ? user.email! : user.phoneNumber!,
+          purpose: OtpPurpose.ACCOUNT_RECOVERY,
+          channel: twoFactorMethod === UserTwoFactorMethod.EMAIL ? OtpChannel.EMAIL : OtpChannel.PHONE
+        });
+
+        if (!otp || otp.status !== OtpStatus.VERIFIED || otp.updatedAt < addMinutes(new Date(), -3)) {
+          throw new BadRequestException("Please verify your action first");
+        }
+      }
+
+      const newPasswordHashed = await hash(newPassword, BCRYPT_ROUNDS);
+      await this.userService.updateUser({
+        id,
+        passwordHashed: newPasswordHashed
+      });
+
+      return {
+        success: true,
+        message: "Password reset completed successfully",
       };
     } catch (error) {
       console.error('Error: ', error);

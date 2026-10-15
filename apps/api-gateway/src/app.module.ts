@@ -33,7 +33,7 @@ import { ConfigService } from '@nestjs/config';
     RefreshTokenModule,
     AuthModule,
     CommonModule,
-    OtpModule
+    OtpModule,
   ],
 })
 export class AppModule { }
