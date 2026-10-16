@@ -1,5 +1,5 @@
 import { validateEnv } from '@app/config';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -9,6 +9,8 @@ import { BullBoardModule } from './bull-board/bull-board.module';
 import { OtpModule } from './otp/otp.module';
 import { BullModule } from '@nestjs/bullmq';
 import { ConfigService } from '@nestjs/config';
+import { PrometheusModule } from './prometheus/prometheus.module';
+import { PrometheusMiddleware } from './common/middlewares/prometheus.middleware';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { ConfigService } from '@nestjs/config';
         connection: {
           host: config.get('REDIS_HOST') || 'redis',
           port: config.get('REDIS_PORT') || 6379,
-          password: config.get('REDIS_PASSWORD')
+          password: config.get('REDIS_PASSWORD'),
         },
       }),
       inject: [ConfigService],
@@ -34,6 +36,11 @@ import { ConfigService } from '@nestjs/config';
     AuthModule,
     CommonModule,
     OtpModule,
+    PrometheusModule,
   ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(PrometheusMiddleware).forRoutes('*');
+  }
+}
